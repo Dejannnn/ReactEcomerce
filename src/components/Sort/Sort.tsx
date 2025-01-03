@@ -1,5 +1,5 @@
 import { Tally3 } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 //Enum
 import { FilterType } from "../../enum/index";
 

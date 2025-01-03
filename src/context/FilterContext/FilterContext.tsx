@@ -17,13 +17,6 @@ type FilterContextType = {
   setKeyword: (keyword: string) => void;
 };
 
-let initalFilter = {
-  searchQuery: "",
-  selectedCategory: "",
-  minPrice: 0,
-  maxPrice: 0,
-  keyword: "",
-};
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
 
 export const FilterProvider = ({ children }: Props) => {

@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 //Types
 import { ItemCardProps } from "./types";

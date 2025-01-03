@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 //types
 import { Product } from "./types";
-const ItemDetail = (props: {}) => {
+const ItemDetail = () => {
   const [product, setProduct] = useState<Product>();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -13,7 +13,6 @@ const ItemDetail = (props: {}) => {
         `${import.meta.env.VITE_API_URL}/products/${id}`
       );
       const data = await response.json();
-      console.log(">>>>data>>", data);
       setProduct(data);
     };
     fetchData();
