@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+
 //Hooks
 import { useFilter } from "../../context/FilterContext/FilterContext";
 //Components
@@ -11,43 +13,29 @@ import Sort from "../Sort/Sort";
 import { FilterType } from "../../enum/index";
 import useFilteredProducts from "./Hooks/FilterHook";
 
-//Helper
-import { createPartOfApiUrl } from "./Helper/index";
-
-const apiUrl = import.meta.env.VITE_API_URL;
+//API
+import { getProduct } from "../../api/Product/product";
 
 const Main = () => {
   const { searchQuery, minPrice, maxPrice, selectedCategory, keyword } =
     useFilter();
   const [filter, setFilter] = useState<string>(FilterType.ALL);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [products, setProducts] = useState<any[]>([]);
   const itemsPerPage = 12;
-  const [pageNumber, setPageNumber] = useState<number>(0);
 
-  useEffect(() => {
-    let skip = (currentPage - 1) * itemsPerPage;
-    let url = `${apiUrl}/products?limit=${itemsPerPage}&skip=${skip}`;
-    if (keyword) {
-      url = `${apiUrl}/products/search?q=${keyword}`;
-    }
-    if (filter) {
-      let path = createPartOfApiUrl(filter);
-      url = url.concat(path);
-    }
-    fetch(url)
-      .then(async (data) => {
-        let response = await data.json();
-        setPageNumber(Math.ceil(response.total / itemsPerPage));
-        setProducts(response.products);
-      })
-      .catch((error) => {
-        console.log(">>>error>>", error);
-      });
-  }, [currentPage, keyword, filter]);
+  let skip = useMemo(() => {
+    return (currentPage - 1) * itemsPerPage;
+  }, [currentPage]);
+
+  const { data } = useQuery({
+    queryKey: ["products", currentPage, filter, keyword],
+    queryFn: () => getProduct(itemsPerPage, skip, keyword, filter),
+  });
+  const products = data?.products || [];
+  const pageNumber = Math.ceil(data?.total / itemsPerPage) || 1;
 
   let filteredProducts: any[] = useFilteredProducts({
-    products,
+    products: products,
     minPrice,
     maxPrice,
     selectedCategory,

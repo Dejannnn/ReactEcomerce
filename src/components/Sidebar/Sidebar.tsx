@@ -117,7 +117,6 @@ const Sidebar = () => {
               value={key}
               name="key"
               onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-                console.log(">>>>>", event.currentTarget.value);
                 setKeyword(event.currentTarget.value);
               }}
             >
